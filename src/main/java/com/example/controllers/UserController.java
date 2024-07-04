@@ -3,50 +3,53 @@ package com.example.controllers;
 import com.example.entities.Book;
 import com.example.entities.Feedback;
 import com.example.entities.ReservedBook;
-import com.example.entities.User;
+import com.example.entities.Users;
 import com.example.services.serviceImplementations.UserServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.Connection;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserServiceImplementation userServicesImp;
 
-
+    @GetMapping("/books")
     public void displayBook(){
         userServicesImp.displayBooks();
     }
 
-    public void displayBorrowedBook(String userId){
-        userServicesImp.displayBorrowedBooks(userId);
+    @GetMapping("/{userId}/borrowed-books")
+    public void displayBorrowedBook(@PathVariable Long userId){
+        userServicesImp.displayBorrowedBooksByUserId(userId);
     }
 
-    public List<ReservedBook> displayDeadlineCrossedBook(Long userId){
+    @GetMapping("/{userId}/deadline-crossed-books")
+    public List<ReservedBook> displayDeadlineCrossedBook(@PathVariable Long userId){
         return userServicesImp.displayDeadlineCrossedBook(userId);
     }
 
-    public void borrowBook(Long userId, Long bookId){
+    @PostMapping("/{userId}/borrow/{bookId}")
+    public void borrowBook(@RequestBody Long userId,@RequestBody Long bookId){
         userServicesImp.BorrowBook(userId, bookId);
     }
 
-    public void RenewBook(User user, ReservedBook book){
-        userServicesImp.RenewBook(user, book);
+    @PostMapping("/return/{userId}")
+    public void returnBook(@PathVariable Long userId,@RequestBody ReservedBook book) {
+        userServicesImp.returnBook(userId, book);
     }
 
-    public void returnBook(User user, ReservedBook book) {
-        userServicesImp.returnBook(user, book);
-    }
-
-    public void submitFeedback(Feedback feedback) {
+    @PostMapping("/feedback")
+    public void submitFeedback(@RequestBody Feedback feedback) {
         userServicesImp.submitFeedback(feedback);
     }
 
-    public List<Book> searchBookByPublications(String publication){
+    @GetMapping("/{publication}")
+    public List<Book> searchBookByPublications(@PathVariable String publication){
         return userServicesImp.searchBookByPublications(publication);
     }
 

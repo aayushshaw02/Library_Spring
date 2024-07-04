@@ -14,4 +14,7 @@ public interface ReservedBookRepository extends JpaRepository<ReservedBook, Long
 
     @Query("Select b from ReservedBook b where b.user.id = :userId and b.deadline = :deadline")
     List<ReservedBook> findAllByUserIdCrossedDeadline(@Param("userId") Long userId, @Param("deadline") String deadline);
+
+    @Query("Select b from ReservedBook b where b.user.id = :userId")
+    List<ReservedBook> findByUserId(@Param("userId") Long userId);
 }

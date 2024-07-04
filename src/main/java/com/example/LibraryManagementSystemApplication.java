@@ -3,93 +3,79 @@ package com.example;
 import com.example.controllers.LibrarianController;
 import com.example.controllers.UserController;
 import com.example.entities.Book;
-import com.example.entities.Feedback;
-import com.example.entities.User;
-import org.springframework.boot.CommandLineRunner;
+import com.example.entities.Users;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDate;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
-public class LibraryManagementSystemApplication{
+public class LibraryManagementSystemApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LibraryManagementSystemApplication.class, args);
-	}
+		ApplicationContext context = SpringApplication.run(LibraryManagementSystemApplication.class, args);
 
-	@Bean
-	public CommandLineRunner commandLineRunner(LibrarianController librarianController, UserController userController){
-		return runner -> {
 
-           User aayush = new User();
-		   aayush.setName("Aayush");
-		   aayush.setPassword("password");
+		LibrarianController controller = context.getBean(LibrarianController.class);
+		UserController userController = context.getBean(UserController.class);
 
-		   User purvesh = new User();
-		   purvesh.setName("Purvesh");
-		   purvesh.setPassword("password");
+		Users users1 = new Users();
+		users1.setName("John Doe");
+		users1.setPassword("password123");
 
-			Book java = new Book();
-			java.setAuthor("Russel");
-			java.setAvailability(true);
-			java.setCategory("Programming");
-			java.setPublication("Oracle");
-			java.setBookName("Java");
+		Users users2 = new Users();
+		users2.setName("Jane Doe");
+		users2.setPassword("password456");
 
-			Book ui = new Book();
-			java.setAuthor("David");
-			java.setAvailability(true);
-			java.setCategory("Designing");
-			java.setPublication("Code");
-			java.setBookName("UI/UX");
+		Book book1 = new Book();
+		book1.setBookName("Book 1");
+		book1.setAuthor("Author 1");
+		book1.setPublication("Publication 1");
+		book1.setAvailability(true);
+		book1.setCategory("Category 1");
 
-			Book devops = new Book();
-			java.setAuthor("Sam");
-			java.setAvailability(true);
-			java.setCategory("Deployment");
-			java.setPublication("GFG");
-			java.setBookName("Devops");
+		Book book2 = new Book();
+		book2.setBookName("Book 2");
+		book2.setAuthor("Author 2");
+		book2.setPublication("Publication 2");
+		book2.setAvailability(true);
+		book2.setCategory("Category 2");
 
-			Book datascience = new Book();
-			java.setAuthor("Martin");
-			java.setAvailability(true);
-			java.setCategory("ArtificialIntelligence");
-			java.setPublication("CodeNinja");
-			java.setBookName("DataScience");
+		Book book3 = new Book();
+		book3.setBookName("Book 3");
+		book3.setAuthor("Author 3");
+		book3.setPublication("Publication 3");
+		book3.setAvailability(true);
+		book3.setCategory("Category 3");
 
-			librarianController.addUser(aayush);
-			librarianController.addUser(purvesh);
+		Book book4 = new Book();
+		book4.setBookName("Book 4");
+		book4.setAuthor("Author 4");
+		book4.setPublication("Publication 4");
+		book4.setAvailability(true);
+		book4.setCategory("Category 4");
 
-			librarianController.addBook(java);
-			librarianController.addBook(ui);
-			librarianController.addBook(datascience);
-			librarianController.addBook(devops);
+		Book book5 = new Book();
+		book5.setBookName("Book 5");
+		book5.setAuthor("Author 5");
+		book5.setPublication("Publication 5");
+		book5.setAvailability(true);
+		book5.setCategory("Category 5");
 
-			librarianController.displayAllUsers();
-			librarianController.displayBooks();
-			librarianController.getAllFeedback();
+		controller.addBook(book1);
+		controller.addBook(book2);
+		controller.addBook(book3);
+		controller.addBook(book4);
+		controller.addBook(book5);
 
-			userController.borrowBook(aayush.getId(), java.getBookId());
-			userController.borrowBook(aayush.getId(), devops.getBookId());
+		controller.addUser(users1);
+		controller.addUser(users2);
 
-			userController.borrowBook(purvesh.getId(), ui.getBookId());
-			userController.borrowBook(purvesh.getId(), datascience.getBookId());
+		System.out.println("Displayed Books: " + controller.displayBooks());
 
-			Feedback feedback = new Feedback();
-			feedback.setUser(aayush);
-			feedback.setMessage("GOOD");
-			feedback.setBookId(java.getBookId().toString());
-			feedback.setGeneratedAt(LocalDate.now().toString());
+		System.out.println("Users total: " + controller.displayAllUsers());
 
-			userController.submitFeedback(feedback);
+		System.out.println("User by Name: " + controller.getUsersByName("John Doe"));
 
-			librarianController.getAllFeedback();
-
-			librarianController.removeUser(purvesh.getId());
-
-			librarianController.displayAllUsers();
-		};
+		userController.borrowBook(1L, 2L);
 	}
 }

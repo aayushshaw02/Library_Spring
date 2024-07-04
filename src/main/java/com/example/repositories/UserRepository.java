@@ -1,18 +1,16 @@
 package com.example.repositories;
 
-import com.example.entities.User;
-import jakarta.persistence.Id;
+import com.example.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
     @Query("Select u from Users u where u.name = :name")
-    List<User> findUsersByName(@Param("name") String name);
+    List<Users> findUsersByName(@Param("name") String name);
 }

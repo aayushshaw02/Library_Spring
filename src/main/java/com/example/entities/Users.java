@@ -10,11 +10,11 @@ import lombok.*;
 @Data
 @ToString
 @Entity
-@Table
-public class Librarian {
+public class Users{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @NotBlank(message = "Name is mandatory")

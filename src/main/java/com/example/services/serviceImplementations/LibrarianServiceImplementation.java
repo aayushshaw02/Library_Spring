@@ -2,16 +2,18 @@ package com.example.services.serviceImplementations;
 
 import com.example.entities.Book;
 import com.example.entities.Feedback;
-import com.example.entities.User;
+import com.example.entities.Users;
 import com.example.repositories.BookRepository;
 import com.example.repositories.FeedBackRepository;
 import com.example.repositories.LibrarianRepository;
 import com.example.repositories.UserRepository;
 import com.example.services.LibrarianService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LibrarianServiceImplementation implements LibrarianService {
@@ -34,13 +36,24 @@ public class LibrarianServiceImplementation implements LibrarianService {
     }
 
     @Override
-    public void addUser(User user) {
-        userRepo.save(user);
+    public void addUser(Users users) {
+        userRepo.save(users);
     }
 
     @Override
-    public void updateBook(Book oldBook, Book newBook) {
+    public void updateBook(Long bookId, Book newBook) {
+        Optional<Book> savedBook = bookRepo.findById(bookId);
+        if(savedBook.isEmpty()){
 
+        }
+        Book oldBook = savedBook.get();
+        oldBook.setBookName(newBook.getBookName());
+        oldBook.setCategory(newBook.getCategory());
+        oldBook.setAuthor(newBook.getAuthor());
+        oldBook.setAvailability(newBook.getAvailability());
+        oldBook.setUser(newBook.getUser());
+        oldBook.setPublication(newBook.getPublication());
+        bookRepo.save(oldBook);
     }
 
     @Override
@@ -54,31 +67,22 @@ public class LibrarianServiceImplementation implements LibrarianService {
     }
 
     @Override
-    public List<Feedback> getAllFeedback() {
-        return feedbackRepo.findAll();
-    }
-
-
-
-    @Override
     public void removeUser(Long userId) {
         userRepo.deleteById(userId);
     }
 
     @Override
-    public List<User> displayAllUsers() {
+    public List<Users> displayAllUsers() {
         return userRepo.findAll();
     }
 
-
-
     @Override
-    public void getAllFeedbacksByBookName(Long bookId) {
-        feedbackRepo.findAllByBookName(bookId);
+    public List<Feedback> getAllFeedbacksByBookId(Long bookId) {
+        return feedbackRepo.findAllByBookName(bookId);
     }
 
     @Override
-    public List<User> getUsersByName(String name) {
+    public List<Users> getUsersByName(String name) {
         return userRepo.findUsersByName(name);
     }
 }

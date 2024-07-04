@@ -3,7 +3,7 @@ package com.example.services.serviceImplementations;
 import com.example.entities.Book;
 import com.example.entities.Feedback;
 import com.example.entities.ReservedBook;
-import com.example.entities.User;
+import com.example.entities.Users;
 import com.example.repositories.BookRepository;
 import com.example.repositories.FeedBackRepository;
 import com.example.repositories.ReservedBookRepository;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -31,13 +32,13 @@ public class UserServiceImplementation implements UserService {
     private ReservedBookRepository reservedBookRepo;
 
     @Override
-    public void displayBooks() {
-        bookRepo.findAll();
+    public List<Book> displayBooks() {
+        return bookRepo.findAll();
     }
 
     @Override
-    public void displayBorrowedBooks(String userId) {
-        reservedBookRepo.findAll();
+    public List<ReservedBook> displayBorrowedBooksByUserId(Long userId) {
+        return reservedBookRepo.findByUserId(userId);
     }
 
     @Override
@@ -51,18 +52,13 @@ public class UserServiceImplementation implements UserService {
         ReservedBook reservedBook = new ReservedBook();
         reservedBook.setUser(userRepo.findById(userId).get());
         reservedBook.setId(bookId);
-        reservedBook.setBorrowedAt(String.valueOf(LocalDate.now()));
-        reservedBook.setDeadline(String.valueOf(LocalDate.now().plusDays(2)));
+        reservedBook.setBorrowedAt(LocalDate.now());
+        reservedBook.setDeadline(LocalDate.now().plusDays(2));
         reservedBookRepo.save(reservedBook);
     }
 
     @Override
-    public void RenewBook(User user, ReservedBook book) {
-
-    }
-
-    @Override
-    public void returnBook(User user, ReservedBook book) {
+    public void returnBook(Long userId, ReservedBook book) {
         reservedBookRepo.deleteById(book.getId());
         bookRepo.updateBookDetailById(book.getId());
     }
