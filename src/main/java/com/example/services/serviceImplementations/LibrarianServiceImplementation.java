@@ -9,7 +9,6 @@ import com.example.repositories.LibrarianRepository;
 import com.example.repositories.UserRepository;
 import com.example.services.LibrarianService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,20 +30,20 @@ public class LibrarianServiceImplementation implements LibrarianService {
     private UserRepository userRepo;
 
     @Override
-    public void addBook(Book book) {
-        bookRepo.save(book);
+    public Book addBook(Book book) {
+        return bookRepo.save(book);
     }
 
     @Override
-    public void addUser(Users users) {
-        userRepo.save(users);
+    public Users addUser(Users users) {
+        return userRepo.save(users);
     }
 
     @Override
-    public void updateBook(Long bookId, Book newBook) {
+    public boolean updateBook(Long bookId, Book newBook) {
         Optional<Book> savedBook = bookRepo.findById(bookId);
         if(savedBook.isEmpty()){
-
+            return false;
         }
         Book oldBook = savedBook.get();
         oldBook.setBookName(newBook.getBookName());
@@ -54,11 +53,16 @@ public class LibrarianServiceImplementation implements LibrarianService {
         oldBook.setUser(newBook.getUser());
         oldBook.setPublication(newBook.getPublication());
         bookRepo.save(oldBook);
+        return true;
     }
 
     @Override
-    public void deleteBookById(Long bookId) {
+    public boolean deleteBookById(Long bookId) {
+        if(bookRepo.findById(bookId).isEmpty()) {
+            return false;
+        }
         bookRepo.deleteById(bookId);
+        return true;
     }
 
     @Override
@@ -67,8 +71,12 @@ public class LibrarianServiceImplementation implements LibrarianService {
     }
 
     @Override
-    public void removeUser(Long userId) {
+    public boolean removeUser(Long userId) {
+        if( userRepo.findById(userId).isEmpty()){
+            return false;
+        }
         userRepo.deleteById(userId);
+        return true;
     }
 
     @Override

@@ -8,13 +8,13 @@ import java.util.List;
 
 
 public interface LibrarianService {
-    void addBook(Book book);
-    void addUser(Users users);
-    void updateBook(Long bookId, Book newBook);
-    void deleteBookById(Long bookId);
+    Book addBook(Book book);
+    Users addUser(Users users);
+    boolean updateBook(Long bookId, Book newBook);
+    boolean deleteBookById(Long bookId);
     List<Book> displayBook();
 
-    void removeUser(Long userId);
+    boolean removeUser(Long userId);
     List<Users> displayAllUsers();
 
     List<Feedback> getAllFeedbacksByBookId(Long bookId);

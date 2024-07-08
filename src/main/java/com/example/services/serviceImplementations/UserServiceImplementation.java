@@ -3,7 +3,6 @@ package com.example.services.serviceImplementations;
 import com.example.entities.Book;
 import com.example.entities.Feedback;
 import com.example.entities.ReservedBook;
-import com.example.entities.Users;
 import com.example.repositories.BookRepository;
 import com.example.repositories.FeedBackRepository;
 import com.example.repositories.ReservedBookRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -47,7 +45,7 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void BorrowBook(Long userId, Long bookId) {
+    public void borrowBook(Long userId, Long bookId) {
         bookRepo.updateUserIdByBookId(userId, bookId);
         ReservedBook reservedBook = new ReservedBook();
         reservedBook.setUser(userRepo.findById(userId).get());
@@ -58,14 +56,14 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void returnBook(Long userId, ReservedBook book) {
-        reservedBookRepo.deleteById(book.getId());
-        bookRepo.updateBookDetailById(book.getId());
+    public void returnBook(Long userId, Long bookId) {
+        reservedBookRepo.deleteById(bookId);
+        bookRepo.updateBookDetailById(bookId);
     }
 
     @Override
-    public void submitFeedback(Feedback feedback) {
-        feedbackRepo.save(feedback);
+    public Feedback submitFeedback(Feedback feedback) {
+        return feedbackRepo.save(feedback);
     }
 
     @Override
