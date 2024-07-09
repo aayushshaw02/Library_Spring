@@ -7,6 +7,10 @@ import com.example.entities.Users;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 @SpringBootApplication
 public class LibraryManagementSystemApplication {
@@ -70,11 +74,31 @@ public class LibraryManagementSystemApplication {
 		controller.addUser(users1);
 		controller.addUser(users2);
 
-		System.out.println("Displayed Books: " + controller.displayBooks());
+		ResponseEntity<Page<Book>> booksResponse = controller.displayBooks(0, 10);
+		Page<Book> booksPage = booksResponse.getBody();
+		if (booksPage != null) {
+			System.out.println("Displayed Books: " + booksPage.getContent());
+		} else {
+			System.out.println("Displayed Books: No content available");
+		}
 
-		System.out.println("Users total: " + controller.displayAllUsers());
+		// Display all users without pagination (assuming this method doesn't support pagination)
+		ResponseEntity<Page<Users>> usersResponse = controller.displayAllUsers(0,10);
+		Page<Users> usersList = usersResponse.getBody();
+		if (usersList != null) {
+			System.out.println("Users total: " + usersList.getContent());
+		} else {
+			System.out.println("Users total: No content available");
+		}
 
-		System.out.println("User by Name: " + controller.getUsersByName("John Doe"));
+		// Get users by name
+		ResponseEntity<Page<Users>> usersByNameResponse = controller.getUsersByName("John Doe",0,10);
+		Page<Users> usersByNameList = usersByNameResponse.getBody();
+		if (usersByNameList != null) {
+			System.out.println("User by Name: " + usersByNameList.getContent());
+		} else {
+			System.out.println("User by Name: No content available");
+		}
 
 		userController.borrowBook(1L, 2L);
 	}

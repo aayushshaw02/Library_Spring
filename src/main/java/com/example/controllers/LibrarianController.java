@@ -6,6 +6,8 @@ import com.example.entities.Feedback;
 import com.example.entities.Users;
 import com.example.services.serviceImplementations.LibrarianServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,18 +25,23 @@ public class LibrarianController {
     LibrarianServiceImplementation librarianServices;
 
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> displayBooks() {
-        List<Book> books = librarianServices.displayBook();
-        if (books == null || books.isEmpty()) {
+    public ResponseEntity<Page<Book>> displayBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Book> books = librarianServices.displayBook(PageRequest.of(page, size));
+        if (books.isEmpty()) {
             return ResponseEntity.noContent().build();  // HTTP 204 No Content
         }
         return ResponseEntity.ok(books);  // HTTP 200 OK with the list of books
     }
 
+
     @GetMapping("/users")
-    public ResponseEntity<List<Users>> displayAllUsers() {
-        List<Users> users = librarianServices.displayAllUsers();
-        if (users == null || users.isEmpty()) {
+    public ResponseEntity<Page<Users>> displayAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Users> users = librarianServices.displayAllUsers(PageRequest.of(page, size));
+        if (users.isEmpty()) {
             return ResponseEntity.noContent().build();  // HTTP 204 No Content
         }
         return ResponseEntity.ok(users);  // HTTP 200 OK with the list of users
@@ -114,21 +121,27 @@ public class LibrarianController {
     }
 
     @GetMapping("/feedbacks/book/{bookId}")
-    public ResponseEntity<List<Feedback>> getAllFeedbacksByBookId(@PathVariable Long bookId) {
-        List<Feedback> feedbacks = librarianServices.getAllFeedbacksByBookId(bookId);
-        if (feedbacks == null || feedbacks.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // HTTP 204 No Content
+    public ResponseEntity<Page<Feedback>> getAllFeedbacksByBookId(
+            @PathVariable Long bookId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Feedback> feedbacks = librarianServices.getAllFeedbacksByBookId(bookId, PageRequest.of(page, size));
+        if (feedbacks.isEmpty()) {
+            return ResponseEntity.noContent().build();  // HTTP 204 No Content
         }
-        return new ResponseEntity<>(feedbacks, HttpStatus.OK);  // HTTP 200 OK with the list of feedbacks
+        return ResponseEntity.ok(feedbacks);  // HTTP 200 OK with the list of feedbacks
     }
 
     @GetMapping("/users/{name}")
-    public ResponseEntity<List<Users>> getUsersByName(@PathVariable String name) {
-        List<Users> users = librarianServices.getUsersByName(name);
-        if (users == null || users.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // HTTP 204 No Content
+    public ResponseEntity<Page<Users>> getUsersByName(
+            @PathVariable String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Users> users = librarianServices.getUsersByName(name, PageRequest.of(page, size));
+        if (users.isEmpty()) {
+            return ResponseEntity.noContent().build();  // HTTP 204 No Content
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);  // HTTP 200 OK with the list of users
+        return ResponseEntity.ok(users);  // HTTP 200 OK with the list of users
     }
 
 }

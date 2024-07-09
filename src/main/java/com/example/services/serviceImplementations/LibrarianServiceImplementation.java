@@ -9,6 +9,8 @@ import com.example.repositories.LibrarianRepository;
 import com.example.repositories.UserRepository;
 import com.example.services.LibrarianService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,9 +67,8 @@ public class LibrarianServiceImplementation implements LibrarianService {
         return true;
     }
 
-    @Override
-    public List<Book> displayBook() {
-        return bookRepo.findAll();
+    public Page<Book> displayBook(PageRequest pageRequest) {
+        return bookRepo.findAll(pageRequest);
     }
 
     @Override
@@ -80,17 +81,17 @@ public class LibrarianServiceImplementation implements LibrarianService {
     }
 
     @Override
-    public List<Users> displayAllUsers() {
-        return userRepo.findAll();
+    public Page<Users> displayAllUsers(PageRequest pageRequest) {
+        return userRepo.findAll(pageRequest);
     }
 
     @Override
-    public List<Feedback> getAllFeedbacksByBookId(Long bookId) {
-        return feedbackRepo.findAllByBookName(bookId);
+    public Page<Feedback> getAllFeedbacksByBookId(Long bookId, PageRequest pageRequest) {
+        return feedbackRepo.findByBookId(bookId, pageRequest);
     }
 
     @Override
-    public List<Users> getUsersByName(String name) {
-        return userRepo.findUsersByName(name);
+    public Page<Users> getUsersByName(String name, PageRequest pageRequest) {
+        return userRepo.findUsersByName(name, pageRequest);
     }
 }

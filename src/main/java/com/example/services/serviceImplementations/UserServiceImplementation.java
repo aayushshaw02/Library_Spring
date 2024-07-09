@@ -9,6 +9,9 @@ import com.example.repositories.ReservedBookRepository;
 import com.example.repositories.UserRepository;
 import com.example.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,18 +33,18 @@ public class UserServiceImplementation implements UserService {
     private ReservedBookRepository reservedBookRepo;
 
     @Override
-    public List<Book> displayBooks() {
-        return bookRepo.findAll();
+    public Page<Book> displayBooks(PageRequest pageable) {
+        return bookRepo.findAll(pageable);
     }
 
     @Override
-    public List<ReservedBook> displayBorrowedBooksByUserId(Long userId) {
-        return reservedBookRepo.findByUserId(userId);
+    public Page<ReservedBook> displayBorrowedBooksByUserId(Long userId, PageRequest pageable) {
+        return reservedBookRepo.findByUserId(userId, pageable);
     }
 
     @Override
-    public List<ReservedBook> displayDeadlineCrossedBook(Long userId) {
-        return reservedBookRepo.findAllByUserIdCrossedDeadline(userId, String.valueOf(LocalDate.now()));
+    public Page<ReservedBook> displayDeadlineCrossedBooks(Long userId,LocalDate deadLine, PageRequest pageable) {
+        return reservedBookRepo.findAllByUserIdCrossedDeadline(userId,deadLine,pageable);
     }
 
     @Override
@@ -67,8 +70,8 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public List<Book> searchBookByPublications(String publication) {
-        return bookRepo.findAllByPublication(publication);
+    public Page<Book> searchBookByPublications(String publication, PageRequest pageable) {
+        return bookRepo.findAllByPublication(publication, pageable);
     }
 
 }
